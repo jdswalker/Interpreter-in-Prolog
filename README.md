@@ -9,25 +9,38 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 
 #### Required Tools:  
 - [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
+- A plain text script in a file with at least one function defined as `main`
 
 #### Program Status & Known Issues:  
 - [x] Tokenizer is working  
 - [x] Lexer is working  
 - [x] Grammar is defined
 - [x] Parser is working
-- [ ] Symbol Table is working  
-- [ ] Interpreter is working  
-- [ ] Modify so multi-argument functions can be used as input
+- [x] Symbol Table is working  
+- [x] Interpreter is working  
+- [ ] Modify code to allow multi-argument functions
 
 #### Program Notes:  
-The program starts by reading whitespace delmited text from a file. For example,  
-<pre>int add ( int a , int b ) = a + b</pre>  
+The language executor to run a script can be called using the `run_program/3` predicate. For example, `run_program('test1.txt', [2], Result).`  
+
+The executor starts by reading the whitespace delmited text from the given file.  
+<pre>int main ( int input ) = input + 3</pre>  
+
 A list of tokens is created from the text in the file as it is read.  
-<pre>[int,add,(,int,a,,,int,b,),=,a,+,b]</pre>  
-Next the list of tokens is lexed into a second list identifying token types.  
-<pre>[TYPE_INT,IDENTIFIER,OPEN_P,TYPE_INT,IDENTIFIER,COMMA,TYPE_INT,IDENTIFIER,  
-CLOSE_P,ASSIGN,IDENTIFIER,ARITH_ADD,IDENTIFIER]</pre>  
-The lexed list is then formatted into a structured list to extract functions.  
-<pre>[[[int,?],(,[[int,?],[,,[[int,?],[]]]],),=,[[?,[]],[[+,[?,[]]]]]]]</pre>  
-The structured list is then merged with the token list to recover the values and create the parsed list for input into the interpreter.  
-<pre>[[[int,add], (,[[int,a],[,,[[int,b],[]]]],),=,[[a,[]],[[+,[b,[]]]]]]]</pre>  
+<pre>['int','main','(','int','input',')','=','input','+','3']</pre>  
+
+Next, the list of tokens is lexed into a second list identifying token types.  
+<pre>['TYPE_INT','IDENTIFIER','OPEN_P','TYPE_INT','IDENTIFIER','CLOSE_P',  
+ 'ASSIGN','IDENTIFIER','ARITH_ADD','INTEGER']</pre>  
+
+The lexed list is then formatted into a structured list.  
+<pre>[[['int','?'],'(',[['int','?'],[]],')','=',[['?',[]],[['+',['integer']]]]]]</pre>  
+
+The token list is then merged with the structured list to recover the values and create the parsed list used as input for the interpreter.  
+<pre>[[['int','main'],'(',[['int','input'],[]],')',=,[['input',[]],[['+',['3']]]]]]</pre>  
+
+Each function defined in the parsed list is then placed into a global symbol table for look-up during execution of the script.  
+<pre>t('main',['int',[['int','input'],[]],[['input',[]],[['+',['3']]]]],-,t,t)</pre>  
+
+Finally, the interpreter calls the `main` function and returns the result.
+<pre>Result:    5</pre>

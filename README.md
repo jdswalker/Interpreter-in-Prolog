@@ -5,15 +5,16 @@ Author: [James Walker](github.com/JDSWalker/)
 ## Overview  
 
 #### Motivation:
-This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script to calculate a result. I am currently updating it so it can handle functions with more than one parameter.  
+This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script to calculate a result. While the interpreter is functional, it can currently only handle functions that use a single parameter.  
 
 #### Required Tools:  
 - [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
 
 #### Program Status & Known Issues:  
 - [x] Tokenizer is working  
-- [ ] Lexer is working  
-- [ ] Grammar is working  
+- [x] Lexer is working  
+- [x] Grammar is defined
+- [x] Parser is working
 - [ ] Symbol Table is working  
 - [ ] Interpreter is working  
 - [ ] Modify so multi-argument functions can be used as input
@@ -26,3 +27,7 @@ A list of tokens is created from the text in the file as it is read.
 Next the list of tokens is lexed into a second list identifying token types.  
 <pre>[TYPE_INT,IDENTIFIER,OPEN_P,TYPE_INT,IDENTIFIER,COMMA,TYPE_INT,IDENTIFIER,  
 CLOSE_P,ASSIGN,IDENTIFIER,ARITH_ADD,IDENTIFIER]</pre>  
+The lexed list is then formatted into a structured list to extract functions.  
+<pre>[[[int,?],(,[[int,?],[,,[[int,?],[]]]],),=,[[?,[]],[[+,[?,[]]]]]]]</pre>  
+The structured list is then merged with the token list to recover the values and create the parsed list for input into the interpreter.  
+<pre>[[[int,add], (,[[int,a],[,,[[int,b],[]]]],),=,[[a,[]],[[+,[b,[]]]]]]]</pre>  

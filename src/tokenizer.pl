@@ -1,4 +1,3 @@
-%% CSCI 3136 - PRINCIPLES OF PROGRAMMING LANGUAGES
 %% Author: James Walker
 %% Copyrighted 2016 under the MIT license:
 %%   http://www.opensource.org/licenses/mit-license.php

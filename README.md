@@ -20,6 +20,9 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 
 #### Program Notes:  
 The program starts by reading whitespace delmited text from a file. For example,  
-`int add ( int a , int b ) = a + b`  
-A list of tokens is created from the text in the file as it is read.
-`[int,add,(,int,a,,,int,b,),=,a,+,b]`
+<pre>int add ( int a , int b ) = a + b</pre>  
+A list of tokens is created from the text in the file as it is read.  
+<pre>[int,add,(,int,a,,,int,b,),=,a,+,b]</pre>  
+Next the list of tokens is lexed into a second list identifying token types.  
+<pre>[TYPE_INT,IDENTIFIER,OPEN_P,TYPE_INT,IDENTIFIER,COMMA,TYPE_INT,IDENTIFIER,  
+CLOSE_P,ASSIGN,IDENTIFIER,ARITH_ADD,IDENTIFIER]</pre>  

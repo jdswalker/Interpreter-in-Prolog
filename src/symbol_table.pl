@@ -32,21 +32,20 @@ create_empty_table :-
 % initialize_functions/1
 % initialize_functions(+FunctionList).
 % Accepts a list of functions and stores them in the symbol table.
-initialize_functions([]) :-
-  !.
+initialize_functions([]).
 initialize_functions([[ReturnType, FunctionName], '(', Parameters, ')', '=',
                      FunctionBody]) :-
   b_getval(symbol_table, SymbolTable),
-  put_assoc(FunctionName, SymbolTable,
+  put_assoc(FunctionName, SymbolTable, 
             [[ReturnType, Parameters, FunctionBody]], NewSymbolTable),
   b_setval(symbol_table, NewSymbolTable),
   !.
 initialize_functions([Function|FunctionList]) :-
   is_list(Function),
   initialize_functions(Function),
-  initialize_functions(FunctionList).
-initialize_functions([Function|FunctionList]) :-
-  \+ is_list(Function),
+  initialize_functions(FunctionList),
+  !.
+initialize_functions([_|FunctionList]) :-
   initialize_functions(FunctionList).
 
 % add_symbol/2
@@ -57,16 +56,8 @@ add_symbol(Key, Value) :-
   b_getval(symbol_table, SymbolTable),
   contains_symbol(Key, SymbolTable, OldValue),
   put_assoc(Key, SymbolTable, [Value|OldValue], NewSymbolTable),
-  b_setval(symbol_table, NewSymbolTable).
-
-% add_symbol_list/2
-% add_symbol_list(+KeyList, +ValueList).
-% Accepts a list of keys and a list of values and adds  every (key, value) 
-% pair to the symbol table
-add_symbol_list([], []).
-add_symbol_list([Key|KeyList], [Value|ValueList]) :-
-  add_symbol(Key, Value),
-  add_symbol_list(KeyList, ValueList).
+  b_setval(symbol_table, NewSymbolTable),
+  nl, write(Key).
 
 % get_symbol/2
 % get_symbol(+Key, ?Value).
@@ -106,8 +97,7 @@ contains_symbol(_, _, []).
 % Accepts a (key->value) pair and removes the most recently added value for
 % that key such that the symbol table is changed from key -> [value|Rest] to 
 % key -> Rest.
-remove_symbols([]) :-
-  !.
+remove_symbols([]).
 remove_symbols([Parameter|ParameterList]) :-
   remove_symbol(Parameter),
   remove_symbols(ParameterList).

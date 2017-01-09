@@ -5,30 +5,29 @@
 %% Purpose: Defines a context free grammar that is used to create the parsed
 %%          list of tokens used by the interpreter.
 
-program(FunctionList) -->
+program([FunctionList]) -->
   functionList(FunctionList).
 
-functionList([Function|FunctionListCollection]) -->
-  function(Function), functionListCollection(FunctionListCollection).
+functionList([Function, FunctionListCollection]) -->
+  function(Function),
+  functionListCollection(FunctionListCollection).
 
 functionListCollection(FunctionListCollection) -->
   functionList(FunctionListCollection).
-functionListCollection([]) --> [].
+functionListCollection([]) -->
+  [].
 
 function([TypeID, '(', TypeIDList, ')', '=', Expression]) -->
   typeID(TypeID),
   ['OPEN_P'],
   typeIDList(TypeIDList),
-  ['CLOSE_P'],
-  ['ASSIGN'],
+  ['CLOSE_P', 'ASSIGN'],
   expression(Expression).
 
-typeID(['int', '?']) -->
-  ['TYPE_INT'],
-  ['IDENTIFIER'].
-typeID(['bool', '?']) -->
-  ['TYPE_BOOL'],
-  ['IDENTIFIER'].
+typeID(['int', 'id']) -->
+  ['TYPE_INT', 'IDENTIFIER'].
+typeID(['bool', 'id']) -->
+  ['TYPE_BOOL', 'IDENTIFIER'].
 
 typeIDList([TypeID, TypeIDListCollection]) -->
   typeID(TypeID),
@@ -37,19 +36,18 @@ typeIDList([TypeID, TypeIDListCollection]) -->
 typeIDListCollection([',', TypeIDList]) -->
   ['COMMA'],
   typeIDList(TypeIDList).
-typeIDListCollection([]) --> [].
+typeIDListCollection([]) -->
+  [].
 
-expression(['if', Comparison, 'then', ValueIfTrue, 'else', ValueIfFalse]) -->
+expression(['if', Comparison, 'then', ValueTrue, 'else', ValueFalse]) -->
   ['COND_IF'],
   comparison(Comparison),
   ['COND_THEN'],
-  value(ValueIfTrue),
+  value(ValueTrue),
   ['COND_ELSE'],
-  value(ValueIfFalse).
-expression(['let', _, '=', Value, 'in', Expression]) -->
-  ['LET'],
-  ['IDENTIFIER'],
-  ['ASSIGN'],
+  value(ValueFalse).
+expression(['let', 'id', '=', Value, 'in', Expression]) -->
+  ['LET', 'IDENTIFIER', 'ASSIGN'],
   value(Value),
   ['LET_IN'],
   expression(Expression).
@@ -59,13 +57,23 @@ expression([Value, Expression]) -->
 
 extraExpression([Arithmetic]) -->
   arithmetic(Arithmetic).
-extraExpression([]) --> [].
+extraExpression([]) -->
+  [].
 
 arithmetic(['+', Value]) -->
   ['ARITH_ADD'],
   value(Value).
 arithmetic(['-', Value]) -->
   ['ARITH_SUB'],
+  value(Value).
+arithmetic(['*', Value]) -->
+  ['ARITH_MUL'],
+  value(Value).
+arithmetic(['/', Value]) -->
+  ['ARITH_DIV'],
+  value(Value).
+arithmetic(['%', Value]) -->
+  ['ARITH_MOD'],
   value(Value).
 
 comparison([Value, Comparison]) -->
@@ -87,7 +95,7 @@ comparisonRight(['>=', Value]) -->
 
 value([integer]) -->
   ['INTEGER'].
-value(['?', ValueParameters]) -->
+value(['id', ValueParameters]) -->
   ['IDENTIFIER'],
   valueParameters(ValueParameters).
 
@@ -95,7 +103,8 @@ valueParameters(['(', Parameters, ')']) -->
   ['OPEN_P'],
   parameters(Parameters),
   ['CLOSE_P'].
-valueParameters([]) --> [].
+valueParameters([]) -->
+  [].
 
 parameters([Value, ParametersList]) -->
   value(Value),
@@ -104,4 +113,5 @@ parameters([Value, ParametersList]) -->
 parametersList([',', Parameters]) -->
   ['COMMA'],
   parameters(Parameters).
-parametersList([]) --> [].
+parametersList([]) -->
+  [].

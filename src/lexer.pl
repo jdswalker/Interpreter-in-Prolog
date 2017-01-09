@@ -36,6 +36,9 @@ lex_token('>',    'LOGIC_GT').
 lex_token('>=',   'LOGIC_GTEQ').
 lex_token('+',    'ARITH_ADD').
 lex_token('-',    'ARITH_SUB').
+lex_token('*',    'ARITH_MUL').
+lex_token('/',    'ARITH_DIV').
+lex_token('%',    'ARITH_MOD').
 lex_token('(',    'OPEN_P').
 lex_token(')',    'CLOSE_P').
 lex_token(ANY_INTEGER, 'INTEGER') :-

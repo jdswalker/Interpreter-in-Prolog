@@ -1,0 +1,4 @@
+int add ( int a , int b ) = a + b
+int letin ( int a ) = let b = 10 in add ( a , b )
+int equal ( int a , int b ) = if a == b then letin ( a ) else 1
+int main ( int input ) = equal ( input , 2 )

@@ -4,7 +4,31 @@
 :- consult('grammar').
 :- consult('parser').
 
-% TOKENIZER TESTS
+% test_all/0
+% test_all.
+% Runs every test in this file.
+test_all :-
+  test_tokenizer,
+  test_lexer,
+  test_structured_list,
+  test_parser,
+  writeln('\n*** TESTING COMPLETE ***\n').
+
+% print_all/0
+% print_all(+InputFileName).
+% Produces outputs for each module with a corresponding test for the given
+% input file.
+print_all :-
+  print_tokenizer_output(InputFileName),
+  print_lexer_output(InputFileName),
+  print_structured_list(InputFileName),
+  print_parser_output(InputFileName),
+  print_symbol_table(InputFileName),
+  writeln('\n*** PRINTING COMPLETE ***\n').
+
+%%%%%%%%%%%%%%%%%%%
+% TOKENIZER TESTS %
+%%%%%%%%%%%%%%%%%%%
 
 % test_tokenizer/0
 % test_tokenizer.
@@ -27,19 +51,30 @@ test_tokenizer :-
   remove_empty_tokens(Tokens, TokenList),
   output_test_result(TokenList, Expected).
 
-% check_tokenizer_output/0
-% check_tokenizer_output.
-% The tokenizer output from two test files is printed
-check_tokenizer_output :-
-  writeln('\nTokenizer output from file "test1.txt"'),
-  tokenize_file('test1.txt', TokenList1),
-  writeq(TokenList1),
-  writeln('\nTokenizer output from file "test2.txt"'),
-  tokenize_file('test2.txt', TokenList2),
-  writeq(TokenList2).
+% print_tokenizer_output/1
+% print_tokenizer_output(+InputFileName).
+% The tokenizer output for the given file is printed
+print_tokenizer_output(InputFileName) :-
+  write('\nTokenizer output for the contents in file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  writeq(TokenList).
+
+% save_tokenizer_output/2
+% save_tokenizer_output(+InputFileName, +OutputFile).
+% The tokenizer output is saved to the given filename
+save_tokenizer_output(InputFileName, OutputFile). :-
+  write('\nTokenizer output to file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  write_output_to_file(InputFileName, TokenList).
 
 
-% LEXER TESTS
+%%%%%%%%%%%%%%%
+% LEXER TESTS %
+%%%%%%%%%%%%%%%
 
 % test_lexer/0
 % test_lexer.
@@ -54,21 +89,32 @@ test_lexer :-
   lexer(TokenList, LexedList),
   output_test_result(LexedList, Expected).
 
-% check_lexer_output/0
-% check_lexer_output.
-% The lexer output from two test files is printed
-check_lexer_output :-
-  writeln('\nLexer output from file "test1.txt"'),
-  tokenize_file('test1.txt', TokenList1),
-  lexer(TokenList1, LexedList1),
-  writeq(LexedList1),
-  writeln('\nLexer output from file "test2.txt"'),
-  tokenize_file('test2.txt', TokenList2),
-  lexer(TokenList2, LexedList2),
-  writeq(LexedList2).
+% print_lexer_output/1
+% print_lexer_output(+InputFileName).
+% The lexer output for the given file is printed
+print_lexer_output(InputFileName) :-
+  write('\nLexer output for the contents in file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  lexer(TokenList, LexedList),
+  writeq(LexedList).
+
+% save_lexer_output/2
+% save_lexer_output(+InputFileName, +OutputFile).
+% The lexer output is saved to the given filename
+save_lexer_output(InputFileName, OutputFile). :-
+  write('\nLexer output to file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  lexer(TokenList, LexedList),
+  write_output_to_file(InputFileName, LexedList).
 
 
-% PARSER TESTS
+%%%%%%%%%%%%%%%%
+% PARSER TESTS %
+%%%%%%%%%%%%%%%%
 
 % test_structured_list/0
 % test_structured_list.
@@ -85,20 +131,29 @@ test_structured_list :-
   parse_list(LexedList, StructuredList),
   output_test_result(StructuredList, Expected).
 
-% check_structured_list_output/0
-% check_structured_list_output.
-% The structured list output from two files is printed
-check_structured_list_output :-
-  writeln('\nStructured list output from file "test1.txt"'),
-  tokenize_file('test1.txt', TokenList1),
-  lexer(TokenList1, LexedList1),
-  parse_list(LexedList1, StructuredList1),
-  writeq(StructuredList1),
-  writeln('\nStructured list output from file "test2.txt"'),
-  tokenize_file('test2.txt', TokenList2),
-  lexer(TokenList2, LexedList2),
-  parse_list(LexedList2, StructuredList2),
-  writeq(StructuredList2).
+% print_structured_list/1
+% print_structured_list(+InputFileName).
+% The structured list output for the given file is printed
+print_structured_list(InputFileName) :-
+  write('\nStructured list output for the contents in file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  lexer(TokenList, LexedList),
+  parse_list(LexedList, StructuredList),
+  writeq(StructuredList).
+
+% save_structured_list/2
+% save_structured_list(+InputFileName, +OutputFile).
+% The structured list output is saved to the given filename
+save_structured_list(InputFileName, OutputFile). :-
+  write('\nStructured list output to file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  lexer(TokenList, LexedList),
+  parse_list(LexedList, StructuredList),
+  write_output_to_file(InputFileName, StructuredList).
 
 % test_parser/0
 % test_parser.
@@ -113,17 +168,64 @@ test_parser :-
   parse_token_list(TokenList, ParsedList),
   output_test_result(ParsedList, Expected).
 
-% check_parser_output/0
-% check_parser_output.
-% The parsed output from two files is printed
-check_parser_output :-
-  writeln('\nTesting Parsed List with file "test2.txt"'),
-  tokenize_file('test2.txt', TokenList),
+% print_parser_output/1
+% print_parser_output(+InputFileName).
+% The structured list output for the given file is printed
+print_parser_output(InputFileName) :-
+  write('\nParser output for the contents in file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
   parse_token_list(TokenList, ParsedList),
   writeq(ParsedList).
 
+% save_parsed_list/2
+% save_parsed_list(+InputFileName, +OutputFile).
+% The structured list output is saved to the given filename
+save_parsed_output(InputFileName, OutputFile). :-
+  write('\nSaving parser output to file "'),
+  write(InputFileName),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  parse_token_list(TokenList, ParsedList),
+  write_output_to_file(InputFileName, ParsedList).
 
-% OUTPUT FROM TESTS
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%  SYMBOL_TABLE  %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+% print_symbol_table/1
+% print_symbol_table(+InputFileName).
+% The initialized symbol table output for the given file is printed
+print_symbol_table(InputFileName) :-
+  write('\nSymbol table output for the contents in file "'),
+  write(OutputFile),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  parse_token_list(TokenList, ParsedList),
+  initialize_table(ParsedList),
+  b_getval(symbol_table, SymbolTable),
+  writeq(SymbolTable).
+
+% save_symbol_table/2
+% save_symbol_table(+InputFileName, +OutputFile).
+% Initializes the symbol table from an input file and save the contents of the
+% table to an output file.
+save_symbol_table(InputFileName, OutputFile) :-
+  write('\nSaving symbol table output to file "'),
+  write(OutputFile),
+  writeln('"'),
+  tokenize_file(InputFileName, TokenList),
+  parse_token_list(TokenList, ParsedList),
+  initialize_table(ParsedList),
+  b_getval(symbol_table, SymbolTable),
+  write_output_to_file(OutputFile, SymbolTable).
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% OUTPUT FROM TESTS %
+%%%%%%%%%%%%%%%%%%%%%
 
 % output_test_result/2
 % output_test_result(+Result, +Expected).

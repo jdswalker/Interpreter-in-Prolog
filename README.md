@@ -1,15 +1,14 @@
-# CSCI 3136 - Simple Script Interpreter
+# CSCI 3136 - Simple Script Interpreter  
 Author: [James Walker](github.com/JDSWalker/)  
 ©2016 under the [MIT license](www.opensource.org/licenses/mit-license.php)  
 
 ## Overview  
 
-#### Motivation:
+#### Motivation:  
 This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script to calculate a result. While the interpreter is functional, it can currently only handle functions that use a single parameter.  
 
 #### Required Tools:  
 - [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
-- A plain text script in a file with at least one function defined as `main`
 
 #### Program Status & Known Issues:  
 - [x] Tokenizer is working  
@@ -18,10 +17,11 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 - [x] Parser is working
 - [x] Symbol Table is working  
 - [x] Interpreter is working  
-- [ ] Modify code to allow multi-argument functions
+- [ ] Debug issues with `test4.txt`, remaining testing files work  
 
 #### Program Notes:  
-The language executor to run a script can be called using the `run_program/3` predicate. For example, `run_program('test1.txt', [2], Result).`  
+The language executor will run a script from a file using the `run_program/3` predicate. For example,  
+`run_program('test1.txt', [2], Result).`  
 
 The executor starts by reading the whitespace delmited text from the given file.  
 <pre>int main ( int input ) = input + 3</pre>  

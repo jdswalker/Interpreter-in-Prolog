@@ -1,0 +1,2 @@
+int multiply ( int a , int b ) = a * b
+int main ( int input ) = add ( input , 2 )

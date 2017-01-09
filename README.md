@@ -9,6 +9,7 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 
 #### Required Tools:  
 - [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
+- A plain text script in a file with the last function defined as `main`  
 
 #### Program Status & Known Issues:  
 - [x] Tokenizer is working  
@@ -17,6 +18,7 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 - [x] Parser is working
 - [x] Symbol Table is working  
 - [x] Interpreter is working  
+- [x] Update modules to handle functions with multiple arguments  
 - [ ] Debug issues with `test4.txt`, remaining testing files work  
 
 #### Program Notes:  

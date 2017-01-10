@@ -25,9 +25,9 @@ function([TypeID, '(', TypeIDList, ')', '=', Expression]) -->
   expression(Expression).
 
 typeID(['int', 'id']) -->
-  ['TYPE_INT', 'IDENTIFIER'].
+  ['TYPE_INT', 'ID'].
 typeID(['bool', 'id']) -->
-  ['TYPE_BOOL', 'IDENTIFIER'].
+  ['TYPE_BOOL', 'ID'].
 
 typeIDList([TypeID, TypeIDListCollection]) -->
   typeID(TypeID),
@@ -47,7 +47,7 @@ expression(['if', Comparison, 'then', ValueTrue, 'else', ValueFalse]) -->
   ['COND_ELSE'],
   value(ValueFalse).
 expression(['let', 'id', '=', Value, 'in', Expression]) -->
-  ['LET', 'IDENTIFIER', 'ASSIGN'],
+  ['LET', 'ID', 'ASSIGN'],
   value(Value),
   ['LET_IN'],
   expression(Expression).
@@ -81,22 +81,22 @@ comparison([Value, Comparison]) -->
   comparisonRight(Comparison).
 
 comparisonRight(['==', Value]) -->
-  ['LOGIC_EQ'],
+  ['RELAT_EQ'],
   value(Value).
 comparisonRight(['!=', Value]) -->
-  ['LOGIC_NOT_EQ'],
+  ['RELAT_NOT_EQ'],
   value(Value).
 comparisonRight(['>', Value]) -->
-  ['LOGIC_GT'],
+  ['RELAT_GT'],
   value(Value).
 comparisonRight(['>=', Value]) -->
-  ['LOGIC_GTEQ'],
+  ['RELAT_GTEQ'],
   value(Value).
 
 value([integer]) -->
   ['INTEGER'].
 value(['id', ValueParameters]) -->
-  ['IDENTIFIER'],
+  ['ID'],
   valueParameters(ValueParameters).
 
 valueParameters(['(', Parameters, ')']) -->

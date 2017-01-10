@@ -30,10 +30,10 @@ lex_token('in',   'LET_IN').
 lex_token('if',   'COND_IF').
 lex_token('then', 'COND_THEN').
 lex_token('else', 'COND_ELSE').
-lex_token('==',   'LOGIC_EQ').
-lex_token('!=',   'LOGIC_NOT_EQ').
-lex_token('>',    'LOGIC_GT').
-lex_token('>=',   'LOGIC_GTEQ').
+lex_token('==',   'RELAT_EQ').
+lex_token('!=',   'RELAT_NOT_EQ').
+lex_token('>',    'RELAT_GT').
+lex_token('>=',   'RELAT_GTEQ').
 lex_token('+',    'ARITH_ADD').
 lex_token('-',    'ARITH_SUB').
 lex_token('*',    'ARITH_MUL').
@@ -41,7 +41,7 @@ lex_token('/',    'ARITH_DIV').
 lex_token('%',    'ARITH_MOD').
 lex_token('(',    'OPEN_P').
 lex_token(')',    'CLOSE_P').
-lex_token(ANY_INTEGER, 'INTEGER') :-
-  atom_number(ANY_INTEGER, Number),
-  integer(Number).
-lex_token(_, 'IDENTIFIER').
+lex_token(Number, 'INTEGER') :-
+  atom_number(Number, Integer),
+  integer(Integer).
+lex_token(_,      'ID').

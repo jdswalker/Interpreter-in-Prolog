@@ -1,1 +1,1 @@
-int main ( int input ) = input + 3
+int main ( int input ) = input + 1

@@ -1,0 +1,6 @@
+int add_test ( int e ) = e + 5
+int multiply_test ( int d ) = add_test ( 6 ) * d
+int divide_test ( int c ) = multiply_test ( 11211 ) / c
+int subtract_test ( int b ) = divide_test ( 10 ) - b
+int modulus_test ( int a ) = subtract_test ( 2325 ) % a
+int main ( int input ) = modulus_test ( input )

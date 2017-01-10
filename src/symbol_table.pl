@@ -56,8 +56,16 @@ add_symbol(Key, Value) :-
   b_getval(symbol_table, SymbolTable),
   contains_symbol(Key, SymbolTable, OldValue),
   put_assoc(Key, SymbolTable, [Value|OldValue], NewSymbolTable),
-  b_setval(symbol_table, NewSymbolTable),
-  nl, write(Key).
+  b_setval(symbol_table, NewSymbolTable).
+
+% add_symbol_list/2
+% add_symbol_list(+KeyList, +ValueList).
+% Accepts a list of keys and a list of values and adds  every (key, value) 
+% pair to the symbol table
+%add_symbol_list([], []).
+%add_symbol_list([Key|KeyList], [Value|ValueList]) :-
+%  add_symbol(Key, Value),
+%  add_symbol_list(KeyList, ValueList).
 
 % get_symbol/2
 % get_symbol(+Key, ?Value).

@@ -5,44 +5,45 @@ Author: [James Walker](github.com/JDSWalker/)
 ## Overview  
 
 #### Motivation:  
-This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script to calculate a result. While the interpreter is functional, it can currently only handle functions that use a single parameter.  
+This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script from a plain-text file and calculate a result. Scripts can contain multiple functions, one per line, with each function requiring one or more input arguments.  
 
 #### Required Tools:  
 - [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
 - A plain text script in a file with the last function defined as `main`  
 
-#### Program Status & Known Issues:  
-- [x] Tokenizer is working  
-- [x] Lexer is working  
-- [x] Grammar is defined
-- [x] Parser is working
-- [x] Symbol Table is working  
-- [x] Interpreter is working  
-- [x] Update modules to handle functions with multiple arguments  
-- [ ] Debug issues with `test4.txt`, remaining testing files work  
+#### Program Capabilities:  
+- Supports integer and boolean values for function arguments and return values  
+- Arithmetic operators have been defined for:  
+**>** addition (`+`)  
+**>** subtraction (`-`)  
+**>** multiplication (`*`)  
+**>** division (`/`)  
+**>** modulus (`%`)  
+- Relational operators have been defined for:  
+**>** Equal (`==`)  
+**>** Not equal (`!=`)  
+**>** Greater than (`>`)  
+**>** Greater than or equal (`>=`)
+- The six scripts in the `testing` folder above use the full range of the interpreter's current capabilities  
 
 #### Program Notes:  
 The language executor will run a script from a file using the `run_program/3` predicate. For example,  
-`run_program('test1.txt', [2], Result).`  
+`run_program('input.txt', [2], Result).`  
 
-The executor starts by reading the whitespace delmited text from the given file.  
-<pre>int main ( int input ) = input + 3</pre>  
+The executor starts by tokenizing whitespace-delmited text from the given file. If `input.txt` contains `int main ( int input ) = input + 3`, then this would be the list of tokens created:  
+`[int,main,(,int,input,),=,input,+,3]`  
 
-A list of tokens is created from the text in the file as it is read.  
-<pre>['int','main','(','int','input',')','=','input','+','3']</pre>  
+The lexer will take this list of tokens and create a second list identifying token types.  
+`[TYPE_INT,ID,OPEN_P,TYPE_INT,ID,CLOSE_P,ASSIGN,ID,ARITH_ADD,INTEGER]`  
 
-Next, the list of tokens is lexed into a second list identifying token types.  
-<pre>['TYPE_INT','IDENTIFIER','OPEN_P','TYPE_INT','IDENTIFIER','CLOSE_P',  
- 'ASSIGN','IDENTIFIER','ARITH_ADD','INTEGER']</pre>  
+The parser takes the lexer output and formats it into a structured list.  
+`[[[[int,id],(,[[int,id],[]],),=,[[id,[]],[[+,[integer]]]]],[]]]`  
 
-The lexed list is then formatted into a structured list.  
-<pre>[[['int','?'],'(',[['int','?'],[]],')','=',[['?',[]],[['+',['integer']]]]]]</pre>  
+Following this, the parser takes the token list from earlier and merges it with the structured list to recover the identifiers and values.  
+`[[[[int,main],(,[[int,input],[]],),=,[[input,[]],[[+,[3]]]]],[]]]`  
 
-The token list is then merged with the structured list to recover the values and create the parsed list used as input for the interpreter.  
-<pre>[[['int','main'],'(',[['int','input'],[]],')',=,[['input',[]],[['+',['3']]]]]]</pre>  
+Each function defined in the parsed list is then placed into a global symbol table for look-up during execution of the script. For the `main` function in the symbol table output below, the function name is first, followed by its return type, its input arguments, and the function body.  
+`t(main,[[int,[[int,input],[]],[[input,[]],[[+,[3]]]]]],-,t,t)`  
 
-Each function defined in the parsed list is then placed into a global symbol table for look-up during execution of the script.  
-<pre>t('main',['int',[['int','input'],[]],[['input',[]],[['+',['3']]]]],-,t,t)</pre>  
-
-Finally, the interpreter calls the `main` function and returns the result.
-<pre>Result:    5</pre>
+Finally, the interpreter calls the `main` function and returns the result.  
+`Result:    5`

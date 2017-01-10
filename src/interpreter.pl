@@ -44,9 +44,9 @@ expression_handler(['if', Comparison, 'then', ValueTrue, 'else', ValueFalse],
                    Result) :-
   comparison_handler(Comparison, ComparisonResult),
   (ComparisonResult == 0 ->
-    Result = ValueTrue
+    value_handler(ValueTrue, Result)
     ;
-    Result = ValueFalse).
+    value_handler(ValueFalse, Result)).
 expression_handler(['let', ID, '=', Value, 'in', Expression], Result) :-
   value_handler(Value, NewValue),
   add_symbol(ID, NewValue),
@@ -117,11 +117,6 @@ parameter_list_handler([',', Parameters], Result) :-
 % type_handler/2
 % type_handler(+Type, ?Result).
 % Checks if the return type for the function is correct
-%type_handler(Type, [Value]) :- 
-%  type_handler(Type, Value).
-%type_handler(Type, [ID, []]) :-
-%  value_handler([ID, []], Value),
-%  type_handler(Type, Value).
 type_handler('int', Value) :-
   integer(Value).
 type_handler('bool', 0).

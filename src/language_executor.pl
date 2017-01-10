@@ -20,5 +20,6 @@ run_program(FileName, Arguments, Result) :-
   tokenize_file(FileName, TokenList),
   parse_token_list(TokenList, ParsedList),
   initialize_table(ParsedList),
+  !,
   call_function('main', Arguments, Result).
   

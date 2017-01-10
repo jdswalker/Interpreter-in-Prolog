@@ -59,7 +59,7 @@ print_tokenizer_output(InputFileName) :-
   write(InputFileName),
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
-  writeq(TokenList).
+  write(TokenList).
 
 % save_tokenizer_output/2
 % save_tokenizer_output(+InputFileName, +OutputFile).
@@ -98,7 +98,7 @@ print_lexer_output(InputFileName) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   lexer(TokenList, LexedList),
-  writeq(LexedList).
+  write(LexedList).
 
 % save_lexer_output/2
 % save_lexer_output(+InputFileName, +OutputFile).
@@ -141,7 +141,7 @@ print_structured_list(InputFileName) :-
   tokenize_file(InputFileName, TokenList),
   lexer(TokenList, LexedList),
   parse_list(LexedList, StructuredList),
-  writeq(StructuredList).
+  write(StructuredList).
 
 % save_structured_list/2
 % save_structured_list(+InputFileName, +OutputFile).
@@ -177,7 +177,7 @@ print_parser_output(InputFileName) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   parse_token_list(TokenList, ParsedList),
-  writeq(ParsedList).
+  write(ParsedList).
 
 % save_parsed_list/2
 % save_parsed_list(+InputFileName, +OutputFile).
@@ -206,7 +206,7 @@ print_symbol_table(InputFileName) :-
   parse_token_list(TokenList, ParsedList),
   initialize_table(ParsedList),
   b_getval(symbol_table, SymbolTable),
-  writeq(SymbolTable).
+  write(SymbolTable).
 
 % save_symbol_table/2
 % save_symbol_table(+InputFileName, +OutputFile).
@@ -242,6 +242,6 @@ output_test_result(Result, Expected) :-
 % Writes the given list to the designated output file
 write_output_to_file(OutputFile, List) :-
   open(OutputFile, write, Stream),
-  writeq(Stream, List),
+  write(Stream, List),
   !,
   close(Stream).

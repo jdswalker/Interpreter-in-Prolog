@@ -1,7 +1,10 @@
 bool equal ( int a , int b ) = if a == b then 0 else 1
 bool not_equal ( int a , int b ) = if a != b then 0 else 1
-int test1 ( int a , int b ) = equal ( a , b ) - not_equal ( a , b )
+int test1 ( int a , int b ) = equal ( a , b ) * 2 * not_equal ( a , b )
 bool greater ( int a , int b ) = if a > b then 0 else 1
 bool greater_or_equal ( int a , int b ) = if a >= b then 0 else 1
-int test2 ( int a , int b ) = greater ( a , b ) + greater_or_equal ( a , b )
-int main ( int a , int b ) = test1 ( a , b ) + test2 ( a , b )
+int test2 ( int a , int b ) = greater ( a , b ) * 4 * greater_or_equal ( a , b )
+bool lesser ( int a , int b ) = if a < b then 0 else 1
+bool lesser_or_equal ( int a , int b ) = if a <= b then 0 else 1
+int test3 ( int a , int b ) = lesser ( a , b ) * 6 * lesser_or_equal ( a , b )
+int main ( int a , int b ) = test1 ( a , b ) + test2 ( a , b ) - test3 ( a , b )

@@ -48,6 +48,14 @@ initialize_functions([Function|FunctionList]) :-
 initialize_functions([_|FunctionList]) :-
   initialize_functions(FunctionList).
 
+% initialize_table/1
+% initialize_table(+ParsedList).
+% Initializes the global symbol table from functions contained in the parsed
+% list
+initialize_table(ParsedList) :-
+  create_empty_table,
+  initialize_functions(ParsedList).
+
 % add_symbol/2
 % add_symbol(+Key, +Value).
 % Accepts a (key->value) pair and adds it to the table in the form:
@@ -58,14 +66,12 @@ add_symbol(Key, Value) :-
   put_assoc(Key, SymbolTable, [Value|OldValue], NewSymbolTable),
   b_setval(symbol_table, NewSymbolTable).
 
-% add_symbol_list/2
-% add_symbol_list(+KeyList, +ValueList).
-% Accepts a list of keys and a list of values and adds  every (key, value) 
-% pair to the symbol table
-%add_symbol_list([], []).
-%add_symbol_list([Key|KeyList], [Value|ValueList]) :-
-%  add_symbol(Key, Value),
-%  add_symbol_list(KeyList, ValueList).
+% contains_symbol/3
+% contains_symbol(+Key, +SymbolTable, ?Value)
+% Returns the first value associated with the key provided or an empty list
+contains_symbol(Key, SymbolTable, Value) :-
+  get_assoc(Key, SymbolTable, Value). % get_assoc(+Key, +Assoc, ?Value)
+contains_symbol(_, _, []).
 
 % get_symbol/2
 % get_symbol(+Key, ?Value).
@@ -84,21 +90,6 @@ remove_symbol(FunctionName) :-
   get_assoc(FunctionName, SymbolTable, [_|FunctionList], NewTable,
             FunctionList),
   b_setval(symbol_table, NewTable).
-
-% initialize_table/1
-% initialize_table(+ParsedList).
-% Initializes the global symbol table from functions contained in the parsed
-% list
-initialize_table(ParsedList) :-
-  create_empty_table,
-  initialize_functions(ParsedList).
-
-% contains_symbol/3
-% contains_symbol(+Key, +SymbolTable, ?Value)
-% Returns the first value associated with the key provided or an empty list
-contains_symbol(Key, SymbolTable, Value) :-
-  get_assoc(Key, SymbolTable, Value). % get_assoc(+Key, +Assoc, ?Value)
-contains_symbol(_, _, []).
 
 % remove_symbols/1
 % remove_symbols(+ParameterList)

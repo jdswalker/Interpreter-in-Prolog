@@ -34,6 +34,8 @@ lex_token('==',   'RELAT_EQ').
 lex_token('!=',   'RELAT_NOT_EQ').
 lex_token('>',    'RELAT_GT').
 lex_token('>=',   'RELAT_GTEQ').
+lex_token('<',    'RELAT_LT').
+lex_token('<=',   'RELAT_LTEQ').
 lex_token('+',    'ARITH_ADD').
 lex_token('-',    'ARITH_SUB').
 lex_token('*',    'ARITH_MUL').

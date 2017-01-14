@@ -44,9 +44,9 @@ expression_handler(['if', Comparison, 'then', ValueTrue, 'else', ValueFalse],
                    Result) :-
   comparison_handler(Comparison, ComparisonResult),
   (ComparisonResult == 0 ->
-    value_handler(ValueTrue, Result)
-    ;
-    value_handler(ValueFalse, Result)).
+    value_handler(ValueTrue, Result) ;
+    value_handler(ValueFalse, Result)
+  ).
 expression_handler(['let', ID, '=', Value, 'in', Expression], Result) :-
   value_handler(Value, NewValue),
   add_symbol(ID, NewValue),
@@ -138,21 +138,31 @@ evaluate(Value1, ['%', Value2], Result) :-
   Result is mod(Value1, Value2).
 evaluate(Value1, ['==', Value2], Result) :-
   (Value1 == Value2 ->
-    Result is 0
-    ;
-    Result is 1).
+    Result is 0 ;
+    Result is 1
+  ).
 evaluate(Value1, ['!=', Value2], Result) :-
   (Value1 \== Value2 ->
-    Result is 0
-    ;
-    Result is 1).
+    Result is 0 ;
+    Result is 1
+  ).
 evaluate(Value1, ['>', Value2], Result) :-
   (Value1 @> Value2 ->
-    Result is 0
-    ;
-    Result is 1).
+    Result is 0 ;
+    Result is 1
+  ).
 evaluate(Value1, ['>=', Value2], Result) :-
   (Value1 @>= Value2 ->
-    Result is 0
-    ;
-    Result is 1).
+    Result is 0 ;
+    Result is 1
+  ).
+evaluate(Value1, ['<', Value2], Result) :-
+  (Value1 @< Value2 ->
+    Result is 0 ;
+    Result is 1
+  ).
+evaluate(Value1, ['<=', Value2], Result) :-
+  (Value1 @=< Value2 ->
+    Result is 0 ;
+    Result is 1
+  ).

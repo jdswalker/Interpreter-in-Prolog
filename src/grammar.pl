@@ -5,7 +5,7 @@
 %% Purpose: Defines a context free grammar that is used to create the parsed
 %%          list of tokens used by the interpreter.
 
-program([FunctionList]) -->
+program(FunctionList) -->
   functionList(FunctionList).
 
 functionList([Function, FunctionListCollection]) -->
@@ -91,6 +91,12 @@ comparisonRight(['>', Value]) -->
   value(Value).
 comparisonRight(['>=', Value]) -->
   ['RELAT_GTEQ'],
+  value(Value).
+comparisonRight(['<', Value]) -->
+  ['RELAT_LT'],
+  value(Value).
+comparisonRight(['<=', Value]) -->
+  ['RELAT_LTEQ'],
   value(Value).
 
 value([integer]) -->

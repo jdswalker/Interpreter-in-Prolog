@@ -5,7 +5,7 @@
 %% Purpose: Tokenize the source file, lex the tokens, structure/parse the
 %%          lexes, add functions to symbol table, run source code to obtain
 %%          the result
-%% E.g.,    run_program('test1.txt', [2], Result).
+%% E.g.,    run_program('script.txt', [2], Result).
 
 % Required files/library
 :- consult('tokenizer').
@@ -21,5 +21,5 @@ run_program(FileName, Arguments, Result) :-
   parse_token_list(TokenList, ParsedList),
   initialize_table(ParsedList),
   !,
-  call_function('main', Arguments, Result).
-  
+  call_function('main', Arguments, Result),
+  !.

@@ -1,17 +1,17 @@
-# CSCI 3136 - Simple Script Interpreter  
-Author: [James Walker](github.com/JDSWalker/)  
-©2016 under the [MIT license](www.opensource.org/licenses/mit-license.php)  
+# Simple Script Interpreter  
+Author: James Walker
+©2017 under the [MIT license]  
 
 ## Overview  
 
-#### Motivation:  
-This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges](academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136), in the winter semester of 2016. The program can read a simple space-delimited script from a plain-text file and calculate a result. Scripts can contain multiple functions, one per line, with each function requiring one or more input arguments.  
+### Motivation:  
+This Prolog program was developed in as part of a term project for CSCI 3136, [Principles of Programming Langauges], in the winter semester of 2016. The program can read a simple space-delimited script from a plain-text file and calculate a result. Scripts can contain multiple functions, one per line, with each function requiring one or more input arguments.  
 
-#### Required Tools:  
-- [SWI-Prolog](http://portableapps.com/apps/development/swi-prolog_portable)  
+### Required Tools:  
+- [SWI-Prolog]  
 - A plain text script in a file with the last function defined as `main`  
 
-#### Program Capabilities:  
+### Program Capabilities:  
 - Supports integer and boolean values for function arguments and return values  
 - Arithmetic operators have been defined for:  
 **>** addition (`+`)  
@@ -28,7 +28,7 @@ This Prolog program was developed in as part of a term project for CSCI 3136, [P
 **>** Lesser than or equal (`<=`)  
 - The six scripts in the `testing` folder above use the full range of the interpreter's capabilities  
 
-#### Program Notes:  
+### Program Notes:  
 The language executor will run a script from a file using the `run_program/3` predicate.  
 For example, `run_program('input.txt', [2], Result).`  
 
@@ -50,4 +50,8 @@ Each function defined in the parsed list is then placed into a global symbol tab
 `t(main,[[int,[[int,input],[]],[[input,[]],[[+,[3]]]]]],-,t,t)`  
 
 Finally, the interpreter calls the `main` function and returns the result.  
-`Result:    5`
+`Result:    5`  
+
+[MIT license]: http://www.opensource.org/licenses/mit-license.php  
+[Principles of Programming Langauges]: http://academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=CSCI+3136  
+[SWI-Prolog]: http://portableapps.com/apps/development/swi-prolog_portable  

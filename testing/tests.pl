@@ -1,3 +1,9 @@
+%% Author: James Walker
+%% Copyrighted 2017 under the MIT license:
+%%   http://www.opensource.org/licenses/mit-license.php
+%%
+%% Purpose: Predicates for testing the various interpreter modules
+
 % Required files/library
 :- consult('tokenizer').
 :- consult('lexer').

@@ -1,5 +1,5 @@
 %% Author: James Walker
-%% Copyrighted 2016 under the MIT license:
+%% Copyrighted 2017 under the MIT license:
 %%   http://www.opensource.org/licenses/mit-license.php
 %%
 %% Purpose: Defines a context free grammar that is used to parse the list of

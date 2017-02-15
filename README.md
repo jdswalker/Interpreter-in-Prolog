@@ -50,8 +50,8 @@ The code in `language_executor.pl` will run a script from a given plain-text fil
 
 **Sixth**, the code in `interpreter.pl` is used to call the `main` function with `2` as input, the script is executed, and the calculated result is returned.  
 
-In Summary:  
-**1.** Read \& tokenize file contents 
+**Summary**  
+**1.** Read \& tokenize file contents  
 `[int,main,(,int,input,),=,input,+,3]`  
 **2.** Lex \& identify token types  
 `[TYPE_INT,ID,OPEN_P,TYPE_INT,ID,CLOSE_P,ASSIGN,ID,ARITH_ADD,INTEGER]`  

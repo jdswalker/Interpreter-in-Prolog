@@ -17,10 +17,6 @@
 
 :- use_module(library(assoc)).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ASSIGNMENT FUNCTIONS  %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % create_empty_table/0
 % create_empty_table.
 % Creates an empty association list and stores it in a global variable for use

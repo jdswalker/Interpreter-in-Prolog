@@ -5,11 +5,11 @@
 %% Purpose: Predicates for testing the various interpreter modules
 
 % Required files/library
-:- consult('tokenizer').
-:- consult('lexer').
-:- consult('grammar').
-:- consult('parser').
-:- consult('symbol_table').
+:- consult('../src/tokenizer').
+:- consult('../src/lexer').
+:- consult('../src/grammar').
+:- consult('../src/parser').
+:- consult('../src/symbol_table').
 
 % test_all/0
 % test_all.
@@ -47,18 +47,17 @@ print_all(InputFileName) :-
 % compared to an expected output.
 test_tokenizer :-
   writeln('Testing Tokenizer'),
-  TestString = 'int main ( int a , int b ) = a - b',
+  TestString = '   int main ( int a , int b ) = a - b   ',
   Expected = ['int','main','(','int','a',',','int','b',')','=','a','-','b'],
   new_memory_file(TempFile),
   open_memory_file(TempFile, write, Writer),
   write(Writer, TestString),
   close(Writer),
   open_memory_file(TempFile, read, Reader, [free_on_close(true)]),
-  get_tokens(Reader, Tokens),
+  read_tokens_from_stream(Reader, Tokens),
   close(Reader),
-  remove_empty_tokens(Tokens, TokenList),
-  output_test_result(TokenList, Expected),
-  !.
+  clean_token_list(Tokens, TokenList),
+  output_test_result(TokenList, Expected).
 
 % print_tokenizer_output/1
 % print_tokenizer_output(+InputFileName).
@@ -68,9 +67,7 @@ print_tokenizer_output(InputFileName) :-
   write(InputFileName),
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
-  writeq(TokenList),
-  nl,
-  !.
+  writeq(TokenList), nl, !.
 
 % save_tokenizer_output/2
 % save_tokenizer_output(+InputFileName, +OutputFile).
@@ -80,8 +77,7 @@ save_tokenizer_output(InputFileName, OutputFile) :-
   write(InputFileName),
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
-  write_output_to_file(OutputFile, TokenList),
-  !.
+  write_output_to_file(OutputFile, TokenList).
 
 
 %%%%%%%%%%%%%%%
@@ -99,8 +95,7 @@ test_lexer :-
               'OPEN_P','TYPE_INT','ID','COMMA','TYPE_INT','ID','CLOSE_P',
               'ASSIGN','ID','ARITH_SUB','ID'],
   lexer(TokenList, LexedList),
-  output_test_result(LexedList, Expected),
-  !.
+  output_test_result(LexedList, Expected).
 
 % print_lexer_output/1
 % print_lexer_output(+InputFileName).
@@ -111,9 +106,7 @@ print_lexer_output(InputFileName) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   lexer(TokenList, LexedList),
-  writeq(LexedList),
-  nl,
-  !.
+  writeq(LexedList), nl, !.
 
 % save_lexer_output/2
 % save_lexer_output(+InputFileName, +OutputFile).
@@ -124,8 +117,7 @@ save_lexer_output(InputFileName, OutputFile) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   lexer(TokenList, LexedList),
-  write_output_to_file(OutputFile, LexedList),
-  !.
+  write_output_to_file(OutputFile, LexedList).
 
 
 %%%%%%%%%%%%%%%%
@@ -172,8 +164,7 @@ save_structured_list(InputFileName, OutputFile) :-
   tokenize_file(InputFileName, TokenList),
   lexer(TokenList, LexedList),
   parse_list(LexedList, StructuredList),
-  write_output_to_file(OutputFile, StructuredList),
-  !.
+  write_output_to_file(OutputFile, StructuredList).
 
 % test_parser/0
 % test_parser.
@@ -190,8 +181,7 @@ test_parser :-
               '(',[['int','a'],[',',[['int','b'],[]]]],')',
               '=',[['a',[]],[['-',['b',[]]]]]],[]],
   clean_parsed_list(TokenList, StructuredList, ParsedList),
-  output_test_result(ParsedList, Expected),
-  !.
+  output_test_result(ParsedList, Expected).
 
 % print_parser_output/1
 % print_parser_output(+InputFileName).
@@ -202,9 +192,7 @@ print_parser_output(InputFileName) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   parse_token_list(TokenList, ParsedList),
-  writeq(ParsedList),
-  nl,
-  !.
+  writeq(ParsedList), nl, !.
 
 % save_parsed_list/2
 % save_parsed_list(+InputFileName, +OutputFile).
@@ -215,8 +203,7 @@ save_parsed_output(InputFileName, OutputFile) :-
   writeln('"'),
   tokenize_file(InputFileName, TokenList),
   parse_token_list(TokenList, ParsedList),
-  write_output_to_file(OutputFile, ParsedList),
-  !.
+  write_output_to_file(OutputFile, ParsedList).
 
 
 %%%%%%%%%%%%%%%%
@@ -238,8 +225,7 @@ test_symbol_table :-
                [['a',[]],[['-',['b',[]]]]]]],'-',t,t),
   initialize_table(ParsedList),
   b_getval(symbol_table, SymbolTable),
-  output_test_result(SymbolTable, Expected),
-  !.
+  output_test_result(SymbolTable, Expected).
 
 % print_symbol_table/1
 % print_symbol_table(+InputFileName).
@@ -252,9 +238,7 @@ print_symbol_table(InputFileName) :-
   parse_token_list(TokenList, ParsedList),
   initialize_table(ParsedList),
   b_getval(symbol_table, SymbolTable),
-  writeq(SymbolTable),
-  nl,
-  !.
+  writeq(SymbolTable), nl, !.
 
 % save_symbol_table/2
 % save_symbol_table(+InputFileName, +OutputFile).
@@ -268,8 +252,7 @@ save_symbol_table(InputFileName, OutputFile) :-
   parse_token_list(TokenList, ParsedList),
   initialize_table(ParsedList),
   b_getval(symbol_table, SymbolTable),
-  write_output_to_file(OutputFile, SymbolTable),
-  !.
+  write_output_to_file(OutputFile, SymbolTable).
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -277,15 +260,14 @@ save_symbol_table(InputFileName, OutputFile) :-
 %%%%%%%%%%%%%%%%%%%%%
 
 % output_test_result/2
-% output_test_result(+Result, +Expected).
+% output_test_result(+Result, +ExpectedResult).
 % Output results of tests to standard output (used in later programs)
-output_test_result(Result, Expected) :-
-  (Result == Expected ->
-    writeln('*** TEST PASSED ***') ;
-    writeln('*** TEST FAILED ***')
-  ),
-  writeln(Result),
-  nl.
+output_test_result(ExpectedResult, ExpectedResult) :-
+  writeln('*** TEST PASSED ***'),
+  writeln(ExpectedResult), nl, !.
+output_test_result(Result, _) :-
+  writeln('*** TEST FAILED ***'),
+  writeln(Result), nl, !.
 
 % write_output_to_file/2
 % write_output_to_file(+OutputFile, +List).
@@ -293,5 +275,4 @@ output_test_result(Result, Expected) :-
 write_output_to_file(OutputFile, List) :-
   open(OutputFile, write, Stream),
   write(Stream, List),
-  !,
-  close(Stream).
+  close(Stream), !.

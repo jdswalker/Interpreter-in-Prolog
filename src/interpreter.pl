@@ -27,7 +27,7 @@ call_function(FunctionName, Arguments, Result) :-
 % function and verifies that each value in the Arguments list has an integer
 % value that is of the same type (bool or int) as the corresponding parameter
 % type from the function data and adds it to the symbol table
-check_parameter_types([], [], []).
+check_parameter_types([], [], []) :- !.
 check_parameter_types([[Type, ID], []], [Value], [ID]) :-
   type_handler(Type, Value),
   add_symbol(ID, Value).
@@ -40,13 +40,12 @@ check_parameter_types([[Type, ID], [',', Parameters]], [Value|Arguments],
 % expression_handler/2
 % expression_handler(+Expression, ?Result).
 % Parses expressions based on the context-free grammar defined in grammar.pl
-expression_handler(['if', Comparison, 'then', ValueTrue, 'else', ValueFalse],
-                   Result) :-
-  comparison_handler(Comparison, ComparisonResult),
-  (ComparisonResult == 0 ->
-    value_handler(ValueTrue, Result) ;
-    value_handler(ValueFalse, Result)
-  ).
+expression_handler(['if', Comparison, 'then', ValueTrue, 'else', _], Result) :-
+  comparison_handler(Comparison, 0),
+  value_handler(ValueTrue, Result).
+expression_handler(['if', Comparison, 'then', _, 'else', ValueFalse], Result) :-
+  comparison_handler(Comparison, 1),
+  value_handler(ValueFalse, Result).
 expression_handler(['let', ID, '=', Value, 'in', Expression], Result) :-
   value_handler(Value, NewValue),
   add_symbol(ID, NewValue),
@@ -61,7 +60,7 @@ expression_handler([Value, ExtraExpression], Result) :-
 % extra_expression_handler(+Expression, ?Result).
 % Parses addition terms in an expression based on the context-free grammar
 % defined in grammar.pl
-extra_expression_handler([], []).
+extra_expression_handler([], []) :- !.
 extra_expression_handler([ExtraExpression], Result) :-
   arithmetic_handler(ExtraExpression, Result).
   
@@ -85,13 +84,13 @@ comparison_handler([Term1, [Operator, Term2]], Result) :-
 % Evaluates terms in an expression and unifies with their value
 value_handler([Number], Result) :-
   atom(Number),
-  atom_number(Number, Result).
-value_handler([Result], Result).
+  atom_number(Number, Result), !.
+value_handler([Result], Result) :- !.
 value_handler([ID, []], Result) :-
-  get_symbol(ID, Result).
+  get_symbol(ID, Result), !.
 value_handler([ID, Parameters], Result) :-
   value_parameter_handler(Parameters, ParameterList),
-  call_function(ID, ParameterList, Result).
+  call_function(ID, ParameterList, Result), !.
 
 % value_parameter_handler/2
 % value_parameter_handler(+Expression, ?Result).
@@ -110,7 +109,7 @@ parameter_handler([Value, ParametersList], [NewValue|NewParameterList]) :-
 % parameter_list_handler(+Expression, ?Result).
 % If the head of a parameter list is a comma, it is ignored and the next
 % parameter is parsed
-parameter_list_handler([], []).
+parameter_list_handler([], []) :- !.
 parameter_list_handler([',', Parameters], Result) :-
   parameter_handler(Parameters, Result).
 
@@ -119,50 +118,57 @@ parameter_list_handler([',', Parameters], Result) :-
 % Checks if the return type for the function is correct
 type_handler('int', Value) :-
   integer(Value).
-type_handler('bool', 0).
-type_handler('bool', 1).
+type_handler('bool', 0).  % Boolean true
+type_handler('bool', 1).  % Boolean false
 
 % evaluate/3
 % evaluate(+Value, +Operator,  ?Result).
-% Evaluates the value provided with the next part and returns the result
-evaluate(Result, [], Result).
-evaluate(Value1, ['+', Value2], Result) :-
+% Using the indicated arithmetric operator and the two values provided, an
+% integer value is calculated and returned as the result
+evaluate(Result, [], Result) :-
+  !.
+evaluate(Value1, ['+', Value2], Result) :-  % Addition
   Result is Value1 + Value2.
-evaluate(Value1, ['-', Value2], Result) :-
+evaluate(Value1, ['-', Value2], Result) :-  % Subtraction
   Result is Value1 - Value2.
-evaluate(Value1, ['*', Value2], Result) :-
+evaluate(Value1, ['*', Value2], Result) :-  % Multiplication
   Result is Value1 * Value2.
-evaluate(Value1, ['/', Value2], Result) :-
+evaluate(Value1, ['/', Value2], Result) :-  % Division
   Result is div(Value1, Value2).
+evaluate(Result, ['%', 0], Result) :-       % Modulus
+  !.
 evaluate(Value1, ['%', Value2], Result) :-
   Result is mod(Value1, Value2).
-evaluate(Value1, ['==', Value2], Result) :-
-  (Value1 == Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
-evaluate(Value1, ['!=', Value2], Result) :-
-  (Value1 \== Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
-evaluate(Value1, ['>', Value2], Result) :-
-  (Value1 @> Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
-evaluate(Value1, ['>=', Value2], Result) :-
-  (Value1 @>= Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
-evaluate(Value1, ['<', Value2], Result) :-
-  (Value1 @< Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
-evaluate(Value1, ['<=', Value2], Result) :-
-  (Value1 @=< Value2 ->
-    Result is 0 ;
-    Result is 1
-  ).
+
+% evaluate/3
+% evaluate(+Value, +Operator,  ?Result).
+% Using the indicated comparison operator and the two values provided, a
+% Boolean value is determined and returned as the result
+evaluate(Value, ['==', Value], 0) :-  % Equal to
+  !.
+evaluate(_, ['==', _], 1) :-
+  !.
+evaluate(Value, ['!=', Value], 1) :-  % Not Equal to
+  !.
+evaluate(_, ['!=', _], 0) :-
+  !.
+evaluate(Value1, ['>', Value2], 0) :-  % Greater than
+  Value1 @> Value2,
+  !.
+evaluate(_, ['>', _], 1) :-
+  !.
+evaluate(Value1, ['>=', Value2], 0) :-  % Greater than or equal to
+  Value1 @>= Value2,
+  !.
+evaluate(_, ['>=', _], 1) :-
+  !.
+evaluate(Value1, ['<', Value2], 0) :-  % Less than
+  Value1 @< Value2,
+  !.
+evaluate(_, ['<', _], 1) :-
+  !.
+evaluate(Value1, ['<=', Value2], 0) :-  % Less than or equal to
+  Value1 @=< Value2,
+  !.
+evaluate(_, ['<=', _], 1) :-
+  !.

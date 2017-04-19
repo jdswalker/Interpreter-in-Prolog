@@ -1,4 +1,4 @@
-# Interpreter Written in Prolog  
+# Script Interpreter Written in Prolog  
 Author: James Walker  
 ©2017 under the [MIT license]  
 
@@ -13,7 +13,6 @@ The interpreter program reads functions from a given plain-text file based on a 
 
 ### Interpreter Capabilities:  
 - Scripts can contain multiple function definitions so long as:  
-**>** Each function is defined on a single line  
 **>** Each function has one or more input arguments  
 **>** The last function is defined as `main`  
 - Supports integer and Boolean values for function arguments and return values  
@@ -38,7 +37,7 @@ The code in `language_executor.pl` will run a script from a given plain-text fil
 
 `int main ( int input ) = input + 3`  
 
-**First**, the code in `tokenizer.pl` reads this as space-delimited text and create a list of tokens.  
+**First**, the code in `tokenizer.pl` reads this as whitespace-delimited text and create a list of tokens.  
 
 **Second**, the code in `lexer.pl` uses the token list to create a lexed list of identified token types.  
 

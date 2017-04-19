@@ -11,10 +11,10 @@
 :- consult('../src/parser').
 :- consult('../src/symbol_table').
 
-% test_all/0
-% test_all.
+% test_all_modules/0
+% test_all_modules.
 % Runs every test in this file.
-test_all :-
+test_all_modules :-
   test_tokenizer,
   test_lexer,
   test_structured_list,
